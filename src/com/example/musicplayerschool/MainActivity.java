@@ -86,11 +86,11 @@ public class MainActivity extends Activity {
 	}
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+		
 		if (requestCode == this.requestCode) {
 			if (resultCode == 10000) {
-				startActivityForResult(intent, requestCode);
-				uri = intent.getData();
+				startActivityForResult(data, requestCode);
+				uri = data.getData();
 				mediaPlayer = MediaPlayer.create(this, uri);
 				Toast.makeText(this, "OK was clicked.", Toast.LENGTH_LONG).show();
 			} else {
