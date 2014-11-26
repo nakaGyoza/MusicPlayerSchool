@@ -36,7 +36,9 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		/*
 		// 音楽ファイル選択してみよう
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("audio/*");
@@ -48,13 +50,14 @@ public class MainActivity extends Activity {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		*/
 
 		title = (TextView) findViewById(R.id.title);
 		seekBar = (SeekBar) findViewById(R.id.seekBar1);
 		current_time = (TextView) findViewById(R.id.current_time);
 		whole_time = (TextView) findViewById(R.id.whole_time);
 		title.setText("sample");
-		// 曲の再生時間を取得
+		/*// 曲の再生時間を取得
 		int duration = mediaPlayer.getDuration();
 		duration /= 1000;
 		int minute = duration / 60;
@@ -82,6 +85,7 @@ public class MainActivity extends Activity {
 
 			}
 		});
+		*/
 
 	}
 	@Override
@@ -98,6 +102,48 @@ public class MainActivity extends Activity {
 			}
 		}
 
+	}
+	
+	public void chooseNum(View v,Intent intent){
+				// 音楽ファイル選択してみよう
+				intent.setType("audio/*");
+				startActivity(intent);
+				try {
+					mediaPlayer.prepare();
+				} catch (IllegalStateException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				// 曲の再生時間を取得
+				int duration = mediaPlayer.getDuration();
+				duration /= 1000;
+				int minute = duration / 60;
+				int second = duration % 60;
+				String m = String.format(Locale.JAPAN, "%02d", minute);
+				String s = String.format(Locale.JAPAN, "%02d", second);
+				whole_time.setText(m + ":" + s);
+				seekBar.setMax(duration);
+				seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+					@Override
+					public void onStopTrackingTouch(SeekBar seekBar) {
+						int progress = seekBar.getProgress() * 1000;
+						mediaPlayer.seekTo(progress);
+						mediaPlayer.start();
+					}
+
+					@Override
+					public void onStartTrackingTouch(SeekBar seekBar) {
+						mediaPlayer.pause();
+					}
+
+					@Override
+					public void onProgressChanged(SeekBar seekBar, int progress,
+							boolean fromUser) {
+
+					}
+				});
+		
 	}
 
 	public void start(View v) {
