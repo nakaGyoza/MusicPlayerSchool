@@ -11,6 +11,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.SeekBar;
@@ -93,7 +94,6 @@ public class MainActivity extends Activity {
 		
 		if (requestCode == this.requestCode) {
 			if (resultCode == 10000) {
-				startActivityForResult(data, requestCode);
 				uri = data.getData();
 				mediaPlayer = MediaPlayer.create(this, uri);
 				Toast.makeText(this, "OK was clicked.", Toast.LENGTH_LONG).show();
@@ -107,8 +107,9 @@ public class MainActivity extends Activity {
 	public void chooseNum(View v,Intent intent){
 				// 音楽ファイル選択してみよう
 				intent.setType("audio/*");
-				startActivity(intent);
+				startActivityForResult(intent, requestCode);
 				try {
+					Log.d("prepare", "呼ばれたぞ");
 					mediaPlayer.prepare();
 				} catch (IllegalStateException e) {
 					e.printStackTrace();
@@ -116,33 +117,35 @@ public class MainActivity extends Activity {
 					e.printStackTrace();
 				}
 				// 曲の再生時間を取得
-				int duration = mediaPlayer.getDuration();
-				duration /= 1000;
-				int minute = duration / 60;
-				int second = duration % 60;
-				String m = String.format(Locale.JAPAN, "%02d", minute);
-				String s = String.format(Locale.JAPAN, "%02d", second);
-				whole_time.setText(m + ":" + s);
-				seekBar.setMax(duration);
-				seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-					@Override
-					public void onStopTrackingTouch(SeekBar seekBar) {
-						int progress = seekBar.getProgress() * 1000;
-						mediaPlayer.seekTo(progress);
-						mediaPlayer.start();
-					}
-
-					@Override
-					public void onStartTrackingTouch(SeekBar seekBar) {
-						mediaPlayer.pause();
-					}
-
-					@Override
-					public void onProgressChanged(SeekBar seekBar, int progress,
-							boolean fromUser) {
-
-					}
-				});
+				if (mediaPlayer != null){
+					int duration = mediaPlayer.getDuration();
+					duration /= 1000;
+					int minute = duration / 60;
+					int second = duration % 60;
+					String m = String.format(Locale.JAPAN, "%02d", minute);
+					String s = String.format(Locale.JAPAN, "%02d", second);
+					whole_time.setText(m + ":" + s);
+					seekBar.setMax(duration);
+					seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+						@Override
+						public void onStopTrackingTouch(SeekBar seekBar) {
+							int progress = seekBar.getProgress() * 1000;
+							mediaPlayer.seekTo(progress);
+							mediaPlayer.start();
+						}
+	
+						@Override
+						public void onStartTrackingTouch(SeekBar seekBar) {
+							mediaPlayer.pause();
+						}
+	
+						@Override
+						public void onProgressChanged(SeekBar seekBar, int progress,
+								boolean fromUser) {
+	
+						}
+					});
+				}
 		
 	}
 
