@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		//Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		/*
 		// 音楽ファイル選択してみよう
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -104,8 +104,9 @@ public class MainActivity extends Activity {
 
 	}
 	
-	public void chooseNum(View v,Intent intent){
+	public void chooseNum(View v){
 				// 音楽ファイル選択してみよう
+				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 				intent.setType("audio/*");
 				startActivityForResult(intent, requestCode);
 				try {
